@@ -16,7 +16,10 @@ public class Squarer {
      * TODO: Inject this field
      */
     Multiplier multiplier;
-
+    @Autowired
+    public Squarer(Multiplier multiplier) {
+        this.multiplier = multiplier;
+    }
     /**
      * Leverage the Multiplier dependency to multiply a value with itself.
      * This will only work if Multiplier was successfully autowired into this class.

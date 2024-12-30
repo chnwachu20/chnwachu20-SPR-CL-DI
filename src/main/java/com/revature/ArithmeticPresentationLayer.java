@@ -15,36 +15,47 @@ import org.springframework.stereotype.Component;
  * perform mathematical operations and return the results
  * as strings.
  *
- * The @Autowired annotation will inform Spring to automatically find the most appropriate bean to wire into this
- * class (based on the name & type of the Object used.) The @Autowired annotation can be used in 3 different ways:
- * constructor injection (above a constructor), setter injection (over a setter method), and field injection
- * (above the injected field declaration itself, as is done here).
- *
- * TODO: Add the @Autowired annotation to achieve dependency injection in 3 different ways (constructor, setter, and field)
+ * The @Autowired annotation is used to inform Spring to automatically find the most appropriate bean to wire into this
+ * class (based on the name & type of the Object used). 
+ * Here, we demonstrate dependency injection using:
+ * - Constructor injection for Squarer.
+ * - Setter injection for Multiplier.
+ * - Field injection for Adder.
  */
 @ComponentScan(basePackages = "com.revature.components")
 @Component
 public class ArithmeticPresentationLayer {
-
+    // Field injection for Adder
+    @Autowired
     private Adder adder;
+
+    // Setter injection for Multiplier
     private Multiplier multiplier;
-    private Squarer squarer;
 
-    public void setMultiplier(Multiplier multiplier) {
-        this.multiplier = multiplier;
-    }
+    // Constructor injection for Squarer
+    private final Squarer squarer;
 
+    @Autowired
     public ArithmeticPresentationLayer(Squarer squarer) {
         this.squarer = squarer;
     }
 
-    public static void main(String[] args) {
-        // Use this main method for manual testing (optional)
-        // Create the Spring container
-        ApplicationContext context =  new AnnotationConfigApplicationContext(ArithmeticPresentationLayer.class);
+    @Autowired
+    public void setMultiplier(Multiplier multiplier) {
+        this.multiplier = multiplier;
+    }
 
-        // Retrieve the RoryApplication bean from the container
+    public static void main(String[] args) {
+        // Create the Spring container
+        ApplicationContext context = new AnnotationConfigApplicationContext(ArithmeticPresentationLayer.class);
+
+        // Retrieve the ArithmeticPresentationLayer bean from the container
         ArithmeticPresentationLayer app = context.getBean(ArithmeticPresentationLayer.class);
+
+        // Example usage
+        System.out.println(app.addConvertToString(3, 4));      // The result of 3.0 + 4.0 is 7.0
+        System.out.println(app.multiplyConvertToString(3, 4)); // The result of 3.0 * 4.0 is 12.0
+        System.out.println(app.squareConvertToString(5));      // The result of 5.0 squared is 25.0
     }
 
     /**
@@ -52,24 +63,24 @@ public class ArithmeticPresentationLayer {
      * @param b - number 2
      * @return the addition operation as a String, see tests for specific formatting
      */
-    public String addConvertToString(double a, double b){
-        return String.format("The result of %.1f + %.1f is %.1f", a, b, adder.add(a,b));
+    public String addConvertToString(double a, double b) {
+        return String.format("The result of %.1f + %.1f is %.1f", a, b, adder.add(a, b));
     }
+
     /**
      * @param a - number 1
      * @param b - number 2
      * @return the multiplication operation as a String, see tests for specific formatting
      */
-    public String multiplyConvertToString(double a, double b){
-        return String.format("The result of %.1f * %.1f is %.1f", a, b, multiplier.multiply(a,b));
+    public String multiplyConvertToString(double a, double b) {
+        return String.format("The result of %.1f * %.1f is %.1f", a, b, multiplier.multiply(a, b));
     }
 
     /**
      * @param a - number 1
      * @return the square operation as a String, see tests for specific formatting
      */
-    public String squareConvertToString(double a){
+    public String squareConvertToString(double a) {
         return String.format("The result of %.1f squared is %.1f", a, squarer.getSquare(a));
     }
-
 }
